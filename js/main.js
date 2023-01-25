@@ -15,40 +15,37 @@ updateTable()
 
 
 
-self.addEventListener("message", (ev)=>{
+self.addEventListener("message", async (ev) => {
     //retrieving submitted data
     const fieldsJson = ev.data;
     const formFieldsObject = JSON.parse(fieldsJson);
     const projectName = formFieldsObject.projectName;
     const city = formFieldsObject.city;
     const description = formFieldsObject.projectDescription;
-    let coordinates = "";
+    let coordinates = await fetchCoordinates()
 
-    fetch(`http://nominatim.openstreetmap.org/search?q=${city}&limit=1&format=json`)
-        .then(response => response.json())
-        .then(json => {
-            coordinates = coordinates
-                .concat(json[0].lat.toString())
+    let dataForTableJson = JSON.stringify({
+        projectName: projectName,
+        city: city,
+        description: description,
+        coordinates: coordinates
+    })
+
+    localStorage.setItem(projectName, dataForTableJson);
+
+    location.reload();
+
+    setTimeout(() => updateTable(), 500);
+})
+
+async function fetchCoordinates(city){
+    let json = await fetch(`http://nominatim.openstreetmap.org/search?q=${city}&limit=1&format=json`)
+        .then(response => response.json());
+
+    return json[0].lat.toString()
                 .concat(", \n")
                 .concat(json[0].lon.toString())
-
-            let dataForTableJson = JSON.stringify({
-                projectName: projectName,
-                city: city,
-                description: description,
-                coordinates: coordinates
-            })
-
-            //storing data to local storage
-            localStorage.setItem(projectName, dataForTableJson);
-
-            //reloading
-            location.reload();
-
-            // //adding to the list
-            setTimeout(() => updateTable(), 500);
-        })
-})
+}
 
 function updateTable(){
     for (let i = 0; i < localStorage.length; i++){
