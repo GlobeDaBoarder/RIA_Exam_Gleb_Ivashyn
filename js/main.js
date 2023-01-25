@@ -3,11 +3,29 @@ let rowIndex = 0;
 
 //initial loading
 (function () {
-    fetch('../resources/initialProjects.json')
-        .then(response => response.json())
-        .then(json => {
-            console.log(json)
-        })
+    console.log(window.localStorage.length)
+
+    if(window.localStorage.length === 0){
+        fetch('../resources/initialProjects.json')
+            .then(response => response.json())
+            .then(async jsonArray => {
+                console.log(jsonArray)
+                console.log(jsonArray.length)
+
+                for (let i = 0; i < jsonArray.length; i++) {
+                    let city = jsonArray[i].city;
+                    console.log(city)
+                    let coordinates = await fetchCoordinates(city)
+                    console.log(coordinates);
+
+                    await writeToLocalStorage(jsonArray[i]);
+
+                }
+
+                location.reload();
+            })
+    }
+
 
 })();
 
@@ -17,11 +35,21 @@ updateTable()
 
 self.addEventListener("message", async (ev) => {
     //retrieving submitted data
-    const fieldsJson = ev.data;
-    const formFieldsObject = JSON.parse(fieldsJson);
-    const projectName = formFieldsObject.projectName;
-    const city = formFieldsObject.city;
-    const description = formFieldsObject.projectDescription;
+    const fieldsObject = ev.data;
+    const formFieldsJson = JSON.parse(fieldsObject);
+
+    await writeToLocalStorage(formFieldsJson)
+
+
+    location.reload();
+
+    updateTable()
+})
+
+async function writeToLocalStorage(formFieldsJson){
+    const projectName = formFieldsJson.projectName;
+    const city = formFieldsJson.city;
+    const description = formFieldsJson.projectDescription;
     let coordinates = await fetchCoordinates()
 
     let dataForTableJson = JSON.stringify({
@@ -32,11 +60,7 @@ self.addEventListener("message", async (ev) => {
     })
 
     localStorage.setItem(projectName, dataForTableJson);
-
-    location.reload();
-
-    setTimeout(() => updateTable(), 500);
-})
+}
 
 async function fetchCoordinates(city){
     let json = await fetch(`http://nominatim.openstreetmap.org/search?q=${city}&limit=1&format=json`)
