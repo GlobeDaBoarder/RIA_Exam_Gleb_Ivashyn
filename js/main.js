@@ -63,6 +63,13 @@ function writeEntryToTable(localStorageKey){
     newRow.insertCell(4).innerText = formFields.coordinates;
     let newDeleteButton = document.createElement('button');
     newDeleteButton.innerText = "delete";
+    newDeleteButton.onclick = () => {
+        let deleteStorageKey = newDeleteButton.parentElement.parentElement.children[1].textContent;
+        let deleteRowKey = newDeleteButton.parentElement.parentElement.firstChild.textContent;
+        localStorage.removeItem(deleteStorageKey)
+        tableBody.deleteRow(deleteRowKey)
+        location.reload();
+    }
     newRow.insertCell(5).insertAdjacentElement('beforeend', newDeleteButton);
 
 }
