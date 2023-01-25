@@ -8,9 +8,10 @@
             event.stopImmediatePropagation()
         }
         else {
-            const titleValue = document.getElementById("title").value;
-            const ageValue = document.getElementById("age").value;
-            const json = JSON.stringify({title: titleValue, age: ageValue})
+            const projectNameValue = document.getElementById("projectName").value;
+            const cityValue = document.getElementById("city").value;
+            const descriptionValue = document.getElementById("description").value;
+            const json = JSON.stringify({projectName: projectNameValue, city: cityValue, projectDescription: descriptionValue})
             console.log("submit...");
             self.postMessage(json);
         }
