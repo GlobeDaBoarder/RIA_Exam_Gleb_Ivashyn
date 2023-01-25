@@ -99,3 +99,33 @@ function writeEntryToTable(localStorageKey){
     newRow.insertCell(5).insertAdjacentElement('beforeend', newDeleteButton);
 
 }
+
+//map
+
+const map = L.map('mymap').setView([51.505, -0.09], 13);
+
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+}).addTo(map);
+
+L.marker([51.5, -0.09]).addTo(map)
+    .bindPopup('A pretty CSS3 popup.<br> Easily customizable.')
+    .openPopup();
+
+let lng = 0;
+let lat = 0;
+map.on('click', function(e) {
+    console.log(e.latlng.lat,e.latlng.lng,e.layerPoint.x,e.layerPoint.y);
+    lng = e.latlng.lng;
+    lat = e.latlng.lat
+
+    L.marker([e.latlng.lat,e.latlng.lng])
+        .addTo(map)
+        .bindPopup('City')
+        .openPopup();
+});
+
+fetch(`http://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`)
+    .then(response => {
+        console.log(response.json())
+    })
