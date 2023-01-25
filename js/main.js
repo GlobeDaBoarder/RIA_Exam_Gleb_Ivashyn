@@ -1,14 +1,19 @@
 let tableBody = document.getElementById("tbody");
 let rowIndex = 0;
 
-  updateTable()
+//initial loading
+(function () {
+    fetch('../resources/initialProjects.json')
+        .then(response => response.json())
+        .then(json => {
+            console.log(json)
+        })
 
-// fetch('../resources/initialProjects.json')
-//     .then(response => response.json())
-//     .then(json => {
-//         console.log(json)
-//     })
-//
+})();
+
+updateTable()
+
+
 
 self.addEventListener("message", (ev)=>{
     //retrieving submitted data

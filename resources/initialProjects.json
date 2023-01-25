@@ -1,3 +1,22 @@
-{
-  "test": "test"
-}
+[
+  {
+    "projectName": "Front-end",
+    "city": "Minsk",
+    "description": "develop front-end"
+  },
+  {
+    "projectName": "Back-end",
+    "city": "Vilnius",
+    "description": "develop back-end"
+  },
+  {
+    "projectName": "Testing",
+    "city": "Vienna",
+    "description": "Do testing"
+  },
+  {
+    "projectName": "Marketing",
+    "city": "Innsbruck",
+    "description": "Do marketing for the project "
+  }
+]
